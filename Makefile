@@ -36,3 +36,8 @@ size:
 objdump:
 	cargo objdump --bin $(NAME) --release -- -disassemble -no-show-raw-insn -print-imm-hex
 
+.PHONY: install
+install:
+	rustup target add thumbv6m-none-eabi thumbv7m-none-eabi thumbv7em-none-eabi thumbv7em-none-eabihf
+	rustup component add llvm-tools-preview
+	cargo install cargo-binutils

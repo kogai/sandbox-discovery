@@ -15,10 +15,9 @@ fn main() -> ! {
     let mut stdout = hio::hstdout().unwrap();
     writeln!(stdout, "Hello, world!").unwrap();
 
-    // exit QEMU or the debugger section
     debug::exit(debug::EXIT_SUCCESS);
 
     loop {
-        // your code goes here
+        panic!();
     }
 }
