@@ -1,16 +1,20 @@
 SRC := $(wildcard ./**/*.rs)
 NAME := app
-TARGET := thumbv7m-none-eabi
+# TARGET := thumbv7m-none-eabi
+TARGET := thumbv7em-none-eabihf
+GDB := arm-none-eabi-gdb
 
-all: target/$(TARGET)/debug/$(NAME)
+all: debug release hello
+
+debug: target/$(TARGET)/debug/$(NAME)
 release: target/$(TARGET)/release/$(NAME)
 hello: target/$(TARGET)/debug/examples/hello
 
 target/$(TARGET)/debug/$(NAME): $(SRC)
-	cargo build --target $(TARGET)
+	cargo build
 
 target/$(TARGET)/release/$(NAME): $(SRC)
-	cargo build --target $(TARGET) --release
+	cargo build --release
 
 target/$(TARGET)/debug/examples/hello: $(SRC)
 	cargo build --example hello
@@ -23,6 +27,12 @@ exec_hello: target/$(TARGET)/debug/examples/hello
 		-nographic \
 		-semihosting-config enable=on,target=native \
 		-kernel target/$(TARGET)/debug/examples/hello
+
+.PHONY: debug_hello
+debug_hello: target/$(TARGET)/debug/examples/hello
+	# Before execute it, exec `openocd` in the other terminal.
+	$(GDB) -x openocd.gdb target/$(TARGET)/debug/examples/hello
+
 
 .PHONY: elfhd
 elfhd:
