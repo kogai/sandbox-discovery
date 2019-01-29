@@ -43,6 +43,16 @@ exec_panic: $(SRC)
 		-semihosting-config enable=on,target=native \
 		-kernel target/thumbv7m-none-eabi/debug/examples/panic
 
+.PHONY: exec_peripheral
+exec_peripheral: $(SRC)
+	cargo build --example peripheral --target thumbv7m-none-eabi
+	qemu-system-arm \
+		-cpu cortex-m3 \
+		-machine lm3s6965evb \
+		-nographic \
+		-semihosting-config enable=on,target=native \
+		-kernel target/thumbv7m-none-eabi/debug/examples/peripheral
+
 .PHONY: elfhd
 elfhd:
 	cargo readobj --bin $(NAME) -- -file-headers
