@@ -33,6 +33,15 @@ debug_hello: target/$(TARGET)/debug/examples/hello
 	# Before execute it, exec `openocd` in the other terminal.
 	$(GDB) -x openocd.gdb target/$(TARGET)/debug/examples/hello
 
+.PHONY: exec_panic
+exec_panic: $(SRC)
+	cargo build --example panic --target thumbv7m-none-eabi
+	qemu-system-arm \
+		-cpu cortex-m3 \
+		-machine lm3s6965evb \
+		-nographic \
+		-semihosting-config enable=on,target=native \
+		-kernel target/thumbv7m-none-eabi/debug/examples/panic
 
 .PHONY: elfhd
 elfhd:
