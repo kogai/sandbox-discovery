@@ -16,6 +16,11 @@ target/$(TARGET)/debug/$(NAME): $(SRC)
 target/$(TARGET)/release/$(NAME): $(SRC)
 	cargo build --release
 
+.PHONY: open_release
+open_release: target/$(TARGET)/release/$(NAME)
+	# Before execute it, execute `openocd` in the other terminal.
+	$(GDB) target/$(TARGET)/release/$(NAME)
+
 target/$(TARGET)/debug/examples/hello: $(SRC)
 	cargo build --example hello
 

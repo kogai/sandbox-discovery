@@ -1,21 +1,30 @@
-#![no_std]
 #![no_main]
+#![no_std]
 
 extern crate cortex_m;
 extern crate cortex_m_rt;
-// you can put a breakpoint on `rust_begin_unwind` to catch panics
+extern crate cortex_m_semihosting;
+extern crate f3;
 extern crate panic_halt;
-// extern crate panic_abort; // requires nightly
-// extern crate panic_itm; // logs messages over ITM; requires ITM support
-// extern crate panic_semihosting; // logs messages to the host stderr; requires a debugger
 
-use cortex_m::asm;
+mod aux5;
+
 use cortex_m_rt::entry;
+use f3::hal::delay::Delay;
+use f3::hal::prelude::*;
+use f3::led::Leds;
 
 #[entry]
 fn main() -> ! {
-    asm::nop();
+    let (mut delay, mut leds): (Delay, Leds) = aux5::init();
+    let half_period = 250u16;
+
     loop {
-        // your code goes here
+        for led in leds.iter_mut() {
+            led.on();
+            delay.delay_ms(half_period);
+            led.off();
+            delay.delay_ms(half_period);
+        }
     }
 }
